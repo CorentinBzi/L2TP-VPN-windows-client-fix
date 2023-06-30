@@ -1,31 +1,28 @@
-# Script d'ajout de connexion VPN et activation du protocole L2TP
-Ce script PowerShell permet d'ajouter une connexion VPN à votre ordinateur en utilisant le protocole L2TP (Layer 2 Tunneling Protocol). Il effectue également une modification dans le registre de Windows pour activer le protocole L2TP.
+# VPN Connection Addition and L2TP Protocol Activation Script
+This PowerShell script adds a VPN connection to your computer using the Layer 2 Tunneling Protocol (L2TP) and also makes a modification in the Windows registry to enable the L2TP protocol.
 
-## Fonctionnement
-Le script utilise la commande Add-VpnConnection pour créer une nouvelle connexion VPN avec les paramètres spécifiés. Voici une explication des paramètres utilisés :
+## How it works
+The script uses the Add-VpnConnection command to create a new VPN connection with the specified parameters. Here's an explanation of the parameters used:
 
+-  Name "VPN": Specifies the name of the VPN connection. You can modify it according to your needs.
+-  ServerAddress YOUR_PUBLIC_IP: Replace YOUR_PUBLIC_IP with the public IP address or domain name of your VPN server.
+-  TunnelType L2tp: Sets the VPN tunnel type to use (L2TP in this case).
+-  RememberCredential: Instructs the computer to remember the credentials for this VPN connection.
+-  L2tpPsk YOUR_PRIVATE_KEY: Replace YOUR_PRIVATE_KEY with the pre-shared private key (PSK) for L2TP authentication.
+-  AuthenticationMethod MSChapv2: Specifies the authentication method to use (MSChapv2 in this case).
+-  EncryptionLevel Maximum: Sets the encryption level of the VPN connection to "Maximum".
+-  Force: Forces the addition of the VPN connection even if a connection with the same name already exists.
 
--  Name "VPN" : spécifie le nom de la connexion VPN. Vous pouvez le modifier selon vos besoins.
--  ServerAddress YOUR_PUBLIC_IP : remplacez YOUR_PUBLIC_IP par l'adresse IP publique ou le nom de domaine de votre serveur VPN.
--  TunnelType L2tp : définit le type de tunnel VPN à utiliser (L2TP dans ce cas).
--  RememberCredential : indique à l'ordinateur de mémoriser les informations d'identification pour cette connexion VPN.
--  L2tpPsk YOUR_PRIVATE_KEY : remplacez YOUR_PRIVATE_KEY par la clé privée pré-partagée (PSK) pour l'authentification L2TP.
--  AuthenticationMethod MSChapv2 : spécifie la méthode d'authentification à utiliser (MSChapv2 dans ce cas).
--  EncryptionLevel Maximum : définit le niveau de chiffrement de la connexion VPN à "Maximum".
--  Force : force l'ajout de la connexion VPN même si une connexion portant le même nom existe déjà.
+After adding the VPN connection, the script uses Windows registry commands to activate the L2TP protocol. It first checks if the registry key AssumeUDPEncapsulationContextOnSendRule exists.
+If it doesn't exist, the script creates the key and sets its value to 00000002.
+Otherwise, it updates the value of the key to 00000002.
+This modification allows the L2TP protocol to function properly across the network.
 
+Finally, the script displays a message indicating that the VPN connection has been successfully added and the registry modification has been completed.
 
-Après l'ajout de la connexion VPN, le script utilise les commandes du registre Windows pour activer le protocole L2TP. Il vérifie d'abord si la clé de registre AssumeUDPEncapsulationContextOnSendRule existe. Si elle n'existe pas, le script crée la clé et lui attribue la valeur 00000002. Sinon, il met à jour la valeur de la clé à 00000002. Cette modification permet au protocole L2TP de fonctionner correctement à travers le réseau.
+## Why this script is necessary
+This script is necessary when you're using the built-in VPN client of Windows and your L2TP VPN server is located behind a modem.
+In this scenario, some modems may block outgoing L2TP VPN traffic, preventing the VPN connection from establishing correctly.
 
-
-Enfin, le script affiche un message indiquant que l'ajout de la connexion VPN et la modification du registre ont été effectués avec succès.
-
-
-## Pourquoi ce script est nécessaire
-Ce script est nécessaire lorsque vous utilisez le client VPN intégré de Windows et que votre serveur VPN L2TP se trouve derrière le modem. Dans ce scénario, certains modems peuvent bloquer le trafic VPN L2TP sortant, ce qui empêche la connexion VPN de s'établir correctement.
-
-
-En exécutant ce script, la connexion VPN L2TP est ajoutée avec les paramètres appropriés, et le script effectue également une modification dans le registre de Windows pour activer le protocole L2TP. Cette modification permet de contourner les restrictions imposées par certains modems et de permettre au trafic VPN L2TP de passer à travers le modem et d'atteindre le serveur VPN.
-
-
-Ainsi, en utilisant ce script, vous pouvez configurer facilement et automatiquement la connexion VPN L2TP lorsque vous utilisez le client VPN intégré de Windows avec un serveur VPN situé derrière un modem, assurant ainsi le fonctionnement de votre connexion VPN.
+By running this script, the L2TP VPN connection is added with the appropriate parameters, and the script also makes a modification in the Windows registry to enable the L2TP protocol.
+This modification helps bypass the restrictions imposed by some modems, allowing L2TP VPN traffic to pass through the modem and reach the VPN server.
